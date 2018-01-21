@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="description" content="start from zero">
+  <meta name="keywords" content="">
+  
+    <link rel="icon" href="/favicon.ico">
+  
+    
+  <title>CSS预处理器 Sass、LESS和Stylus的语法和区别 | inerdstack</title>
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.1.20/jquery.fancybox.min.css" />
+</head>
+
+<body>
+  <header>
+  <div class="header-container">
+    <a class='logo' href="/">
+      <span>inerdstack</span>
+    </a>
+    <ul class="right-header">
+      
+        <li class="nav-item">
+          
+            <a href="/" class="item-link">首页</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/about" class="item-link">关于</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/archives" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/tags" class="item-link">标签</a>
+          
+        </li>
+      
+    </ul>
+  </div>
+</header>
+
+  <main id='post'>
+  <div class="content">
+    <article>
+        <section class="content markdown-body">
+          <h1>CSS预处理器 Sass、LESS和Stylus的语法和区别</h1>
+          <div class='post-meta'>
+            <i class="fa fa-calendar" aria-hidden="true"></i> <time>2018年01月21日</time>
+            
+            
+          </div>
+          <h2 id="基本语法"><a href="#基本语法" class="headerlink" title="基本语法"></a>基本语法</h2><p>Less的基本语法属于 CSS风格 ，而Sass、Stylus相比之下激进一些，利用缩进、空格和换行来减少需要输入的字符。不过区别在于Sass、Stylus同时也兼容 CSS风格 代码。  </p>
+<p>###<font color="red"> Less:</font><br>        .box{<br>            display:block;<br>            }</p>
+<h3 id="Sass"><a href="#Sass" class="headerlink" title="Sass:"></a><font color="red">Sass:</font></h3><pre><code>.box
+    display:block
+</code></pre><p>###<font color="red"> Stylus: </font><br>        .box<br>            display:block</p>
+<h2 id="嵌套语法"><a href="#嵌套语法" class="headerlink" title="嵌套语法"></a>嵌套语法</h2><p>三者的嵌套语法都是一致的，甚至连引用父级选择器的标记 <code>&amp;</code> 也相同。区别只是Sass和Stylus可以用没有大括号的方式书写，以Less为例：</p>
+<pre><code>.a{
+    &amp;.b{
+        color:red;
+        }
+    }    
+</code></pre><p>生成的CSS为：  </p>
+<pre><code>.a.b{
+    color:red;
+    }
+</code></pre><p>除了规则集的嵌套，Sass额外提供了一个我个人认为比较鸡肋的 属性嵌套：  </p>
+<pre><code>.funky{
+    font:{
+        family:fantasy;
+        size: 30em;
+        weight:bold;
+        }
+}            
+</code></pre><h2 id="选择器引用"><a href="#选择器引用" class="headerlink" title="选择器引用"></a>选择器引用</h2><p>三者都支持用 <code>&amp;</code> 在嵌套的规则集中引用上层的选择器，这可以是嵌套书写CSS时的 惯例 了。语法相同，但是逻辑上有些许差异。在一个选择器中用两次以上 <code>&amp;</code> 且父选择器是一个列表时，Less会对选择器进行排列组合，而Sass和Stylus不会这么做。       </p>
+<p>也就是说，假设上层选择器为 <code>.a, .b</code>,则内部的 <code>&amp; &amp;</code> 在Less中会成为 <code>.a .a, .a .b,.b .a,.b .b</code>。  </p>
+<p>假设我们要用预处理器书写<a href="https://html.spec.whatwg.org/multipage/rendering.html#sections-and-headings" target="_blank" rel="noopener"> WHATWG 推荐的 section 标题样式</a></p>
+<pre><code>aritcle,aside,nav,section{
+h1{
+    margin-top:0.83em;
+    margin-bottom:0.83em;
+    font-size:1.50em;
+    }
+    &amp; &amp; h1 {
+      margin-top: 1.00em;
+      margin-bottom: 1.00em;
+      font-size: 1.17em;
+  }
+  &amp; &amp; &amp; h1 {
+      margin-top: 1.33em;
+      margin-bottom: 1.33em;
+      font-size: 1.00em;
+  }
+  &amp; &amp; &amp; &amp; h1 {
+      margin-top: 1.67em;
+      margin-bottom: 1.67em;
+      font-size: 0.83em;
+  }
+  &amp; &amp; &amp; &amp; &amp; h1 {
+      margin-top: 2.33em;
+      margin-bottom: 2.33em; 
+      font-size: 0.67em;
+  }
+}
+</code></pre><p>当然，这个推荐样式十分脑残，编译出来的结果会有47KB之多，根本不可用，这里只是借来演示一下。</p>
+<p>除了<code>&amp;</code>，Sass和Stylus更进一步，分别用 <code>@at-root</code> 和 / 符号作为嵌套时 根 规则集的选择器引用。这有什么用那？举个例子，假设HTML结构是这样的：</p>
+<pre><code>&lt;article class=&quot;post&quot;&gt;
+              &lt;h1&gt;我是一篇文章&lt;/h1&gt;
+              &lt;section&gt;
+                &lt;h1 class=&quot;section-title&quot;&gt;&lt;a href=&quot;#s1&quot; class=&quot;section-link&quot;&gt;#&lt;/a&gt;我是章节标题&lt;/h1&gt;
+                &lt;p&gt;我只是一个&lt;em&gt;例子&lt;/em&gt;。&lt;/p&gt;
+              &lt;/section&gt;
+            &lt;/article&gt;            
+</code></pre><p>如果我这么写 Sass 代码，是完全符合业务的嵌套关系的：</p>
+<p>.post {<br>                  section {<br>                    .section-title {<br>                      color: #333;<br>                      .section-link {<br>                        color: #999;<br>                      }<br>                    }<br>                    /<em> other section styles </em>/<br>                  }<br>                  /<em> other post styles </em>/<br>                }<br>但是这样生成出来的选择器会有 <code>.post section .setion .section-link</code> ,很多时候我们觉得写成 <code>.post .section-link</code>就够了。  </p>
+<p>于是我们在Stylus中可以这么写：</p>
+<pre><code>.post
+  section
+    .section-title
+      color #333
+      /.post .section-link
+        color #999
+    /* other section styles */
+
+  /* other post styles */
+</code></pre><p>这样输出的 CSS 就会是：</p>
+<pre><code>.post section .section-title {
+  color: #333;
+}
+.post .section-link {
+  color: #999;
+}             
+</code></pre><p>这就是我们想要的样子了。当然也可以这样写：</p>
+<pre><code>.post
+  section
+    .section-title
+      color #333
+    /* other section styles */
+
+  .section-link
+    color #999
+  /* other post styles */
+</code></pre><h3 id="我个人是推荐这种写法，因为当你确定-section-link-的样式不依赖于它位于-section-或-section-title-下时，就不该嵌套于此，否则如果为了一点点性能上的考虑-还不一定是优化-，使得设计意图变得更不准确，我觉得得不偿失"><a href="#我个人是推荐这种写法，因为当你确定-section-link-的样式不依赖于它位于-section-或-section-title-下时，就不该嵌套于此，否则如果为了一点点性能上的考虑-还不一定是优化-，使得设计意图变得更不准确，我觉得得不偿失" class="headerlink" title="我个人是推荐这种写法，因为当你确定 .section-link  的样式不依赖于它位于 section 或 .section-title 下时，就不该嵌套于此，否则如果为了一点点性能上的考虑(还不一定是优化)，使得设计意图变得更不准确，我觉得得不偿失"></a>我个人是推荐这种写法，因为当你确定 <code>.section-link</code>  的样式不依赖于它位于 <code>section</code> 或 <code>.section-title</code> 下时，就不该嵌套于此，否则如果为了一点点性能上的考虑(还不一定是优化)，使得设计意图变得更不准确，我觉得得不偿失</h3><h2 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h2><p>变量无疑为CSS增加了一种有效的复用方式，减少了原来在CSS中无法避免的重复 硬编码。</p>
+<p>###<font color="red"> Less:</font></p>
+<pre><code>@red: #c00;
+
+strong {
+  color: @red;
+}
+</code></pre><h3 id="Sass-1"><a href="#Sass-1" class="headerlink" title="Sass:"></a><font color="red">Sass:</font></h3><pre><code>$red: #c00;
+
+strong {
+  color: $red;
+}
+</code></pre><p>###<font color="red"> Stylus: </font></p>
+<pre><code>red = #c00
+
+strong
+  color: red
+</code></pre><p>Less的选择有一盒问题：@规则在CSS中可以算是一种 原生 的扩展方式。变量名用<code>@</code>开头很可能会和以后的新 <code>@</code> 规则冲突。(当然理论上只要CSS规范不引入 <code>@a:b</code>这样的规则，问题也不大。)</p>
+<p>相比之下Sass的选择中规中矩，而Stylus就不同了，不需要额外的标志符。这意味着：在Stylus中，我们可以覆写CSS原生的属性值！Stylus的设计让人有一种 [你以为在写CSS，但其实你不是] 的感觉,后面会有很多这样的例子。</p>
+<h2 id="变量作用域"><a href="#变量作用域" class="headerlink" title="变量作用域"></a>变量作用域</h2><p>三种预处理器的变量作用域都是按嵌套的规则集划分，并且在当前规则集下找不到对应变量时会逐级向上查找，注意这个和原生CSS的逻辑是完全不同的。  </p>
+<p>如果我们在代码中重写某个已经定义的变量的值，Less的处理逻辑和其他两者有非常<strong>关键</strong>的区别。在Less中，这个行为被称为<a href="http://lesscss.org/features/#variables-feature-lazy-loading" target="_blank" rel="noopener">懒加载</a>。所有Less变量的计算，都是以这个变量最后一次被定义的值为准（就是被覆盖了，最后一个把之前所有定义的都覆盖了）。举个例子更容易说清楚：</p>
+<p>###<font color="red"> Less:</font><br>    @size: 10px;<br>    .box {<br>        width: @size;<br>    }</p>
+<pre><code>@size: 20px;
+.ball {
+    width: @size;
+}
+</code></pre><h3 id="输出"><a href="#输出" class="headerlink" title="输出"></a>输出</h3><pre><code>.box {
+  width: 20px;
+}
+.ball {
+  width: 20px;
+}    
+</code></pre><p>###<font color="red">而在 Stylus 中： </font><br>    size = 10px<br>    .box<br>      width: size</p>
+<pre><code>size = 20px
+.ball
+  width: size
+</code></pre><h3 id="输出-1"><a href="#输出-1" class="headerlink" title="输出"></a>输出</h3><pre><code>.box {
+  width: 10px;
+}
+.ball {
+  width: 20px;
+}
+</code></pre><p>Sass的处理方式和Stylus相同，变量值输出时根据之前的一次定义计算。这其实代表了两种理念：Less更倾向接近CSS的声明式，计算过程弱化调用时机；而Sass和Stylus更倾向于指令式。这两种方式会导致怎样的结果那？</p>
+<p>举个例子来说，对于Less，如果项目中引入了这样一个文件：</p>
+<pre><code>@error-color: #c00;
+@success-color: #0c0;
+.error {
+  color: @error-color;
+  background-color: lighten(@error-color, 40%);
+}
+.success {
+  color: @success-color;
+  background-color: lighten(@success-color, 40%);
+}      
+</code></pre><p>在业务代码中，在不修改外部引入文件的情况下，如果我想重写这两种状态的配色，只需要重新配置 @error-color 和 @success-color 这两个变量，就能改变 .error 和 .success 的样式。  </p>
+<p>而在 Stylus 中，如果引入的第三方样式库中有这样的代码：<br>    error-color = #c00<br>    success-color = #0c0</p>
+<pre><code>.error
+  color: error-color
+  background-color: lighten(error-color, 40%)
+
+.success
+  color: success-color
+  background-color: lighten(success-color, 40%)   
+</code></pre><p>这种情况下后面的代码就无法通过重写变量值来覆盖样式了。Sass 也是如此。优点是 Stylus 和 Sass 这样的处理会不容易受多个第三方库变量名冲突的影响，因为一个变量不能影响在定义它以前的输出样式。  </p>
+<p>由于 Sass 和 Stylus 变量在「运行」过程中使用完可以修改后再使用输出不同的值，所以这两者还提供了「仅当变量不存在时才赋值」的功能：    </p>
+<p>###<font color="red">Sass： </font><br>    $x: 1;<br>    $x: 5 !default;<br>    $y: 3 !default;</p>
+<pre><code>// $x = 1, $y = 3
+</code></pre><p>###<font color="red"> Stylus： </font></p>
+<pre><code>x = 1
+x := 5 // or x ?= 5
+y = 3
+
+// x = 1, y = 3  
+</code></pre><p>因为变量只能在输出前修改才能生效，所以如果要定制第三方库的样式，用户代码理论上得插入第三方库的配置与样式之间才能生效。而有了 !default，第三方库在提供默认配置时可以将开发给用户修改的变量设置为 !default，这样只要用户提前引入配置进行覆盖，就可以按需重写默认配置了：  </p>
+<pre><code>// lib.scss
+   $alert-color: red !default;
+   .alert {
+     color: $alert-color;
+   }         
+
+
+
+   // var.scss
+   $alert-color: #c00;           
+
+   // page.scss
+   @import var
+   @import lib
+</code></pre><p>这样最终页面输出的效果就是被用户重定义过的内容了。   </p>
+<pre><code>/* page.css */
+.alert {
+  color: #c00;
+}
+</code></pre><p>由于 Less 处理变量的方式，如果我们要引入多个外部样式库或在多个团队进行合作开发时，如果不能确保开发过程可控，那为变量添加模块前缀就变得很有必要。  </p>
+<p>此外，Sass 中提供一个 !global 的语法来让局部变量变成全局变量，也就是说 Sass 代码可以在内层覆盖全局变量的值。输出一段局部的样式可能使得后续所有样式都受到全局变量变化的影响。（这其实是 Sass 开始时默认的逻辑，Sass 3.3 以前所有变量都是全局的，之后改成了和 Less 和 Stylus 一样有嵌套作用域，全局变量要显式指定 !global。）        </p>
+<h2 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h2><p>先说说原生函数。三种预处理器都自带了诸如色彩处理、类型判断、数值计算等内置函数，目前版本的数量都在 80 个左右。由于 Sass 和 Stylus 都内置脚本语言，所以自带函数中包括了很多处理不同数据类型、修改选择器的函数。Sass 更是提供了不少特性检测函数比如 feature-exists($feature)、variable-exists($name) 等，这为第三方库的兼容性提供了很好的保障。因为有了这些函数可以方便地对不同版本的 Sass 编译器有针对性地提供兼容，而不怕在老版本的编译环境中直接报错。   </p>
+<p>三者调用函数的方式几乎一致，不同之处在于 Sass 和 Stylus 支持直接指定参数名的方式传入参数。以 Stylus 为例：</p>
+<pre><code>subtract(a, b)
+  a - b
+
+subtract(b: 10, a: 25) // same as substract(25, 10)  
+</code></pre><p>这样做的好处是，如果参数列表比较长，Stylus 可以直接为列表后面的参数赋值，而不需要一路将之前的参数填上 null 或默认值。Stylus 将这个特性称为「Named parameters」，而 Sass 称为「Keyword arguments」。   </p>
+<p>关于函数，真正的区别在于：Sass 和 Stylus 都支持用 DSL 直接添加自定义函数，而 Less 中如果要添加自定义函数必须通过使用插件（2.0.0 以后的版本才支持插件）。这决定了用 Sass 和 Stylus 书写的代码可移植性更高，不需要编译环境有插件即可运行，而 Less 则需要额外添加编译时的依赖。  </p>
+<p>Sass 中自定义函数需要使用 @function 指令，并用 @return 指令返回结果：</p>
+<pre><code>@function golden-ratio($n) {
+  @return $n * 0.618;
+}
+
+.golden-box {
+  width: 200px;
+  height: golden-ratio(200px);
+}    
+</code></pre><p>在 Stylus 中，这些都是隐含的，最后一个表达式的值会作为返回值：  </p>
+<pre><code>golden-ratio(n)
+  n * 0.618
+
+.golden-box
+  width: 200px
+  height: golden-ratio(@width)
+</code></pre><p>这种写法和 mixin 有什么区别？当把函数作为 mixin 调用时，如果其中有 prop: value 这样格式的内容，就会被当做样式规则输出。Stylus 中大量的内容都是根据调用时的 context 去隐式推断该使用什么逻辑进行输出，而非 Less 和 Sass 那样使用关键字去显式地进行区分。</p>
+<h2 id="逻辑控制"><a href="#逻辑控制" class="headerlink" title="逻辑控制"></a>逻辑控制</h2><p>Sass 中通过常见的 @if、@else if、@else 实现条件分支，通过 @for、@each、@while 实现循环，配合 map 和 list 这两种数据类型可以轻松地实现多数编程语言提供的功能。</p>
+<p>在 Stylus 中，不需要使用 @ 规则，提供了 if、else if、else、unless、for…in 来实现类似功能，语法比 Sass 更简洁灵活。</p>
+<p>再来看 Less，上面说到的功能 Less 都没有提供。那在 Less 中如何进行逻辑控制呢？Less 中只有一个方式：使用 mixin。</p>
+<p>Less 中的 mixin 通过「guard」的方式支持简单的条件分支控制。比如我们要实现一个控制 ::placeholder 样式的 mixin，当传入颜色时只设置颜色，当传入声明块时输出对应的样式规则，其他情况输出一个默认的 color：</p>
+<pre><code>.mixin(@val) when (iscolor(@val)) {
+  color: @val;
+}
+.mixin(@val) when (isruleset(@val)) {
+  @val();
+}
+.mixin(@val) when (default()) {
+  // default() in guards acts as else
+  color: #666;
+}
+</code></pre><p>Guard 语句中的语法非常类似 CSS media query 中的对应功能，事实上这也是 Less 一直以来的理念：保持声明式语法，弱化指令和流程。但是事实上，这为书写需要提供灵活接口的样式库造成了非常大的不便。最简单的三元表达式在 Less 中也需要先定义一个 mixin，根据判断条件写对应的 guard 表达式，然后再输出。</p>
+<p>而对于循环，Less 本身并不支持。但官网给出了一个使用 mixin 递归调用模拟循环的例子：</p>
+<pre><code>.loop(@counter) when (@counter &gt; 0) {
+  .loop((@counter - 1));    // next iteration
+  width: (10px * @counter); // code for each iteration
+}
+
+div {
+  .loop(5); // launch the loop
+}    
+</code></pre><p>编译结果为：</p>
+<p>div {<br>  width: 10px;<br>  width: 20px;<br>  width: 30px;<br>  width: 40px;<br>  width: 50px;<br>}</p>
+<p>这是一种非常别（dàn）扭（téng）的实现方式，但从 Less 开发团队的态度来看，未来并没什么可能在 Less 中见到真正的条件分支和循环——因为「Less 不是 Sass」。</p>
+<p>由于逻辑处理能力不能与 Sass 和 Stylus 相比，所以在 Less 中可能还会需要借助 JS 表达式来进行 mixin 参数的解析处理。这个功能 Less 官方已经是不推荐使用的了（已经从官网文档中移除）——因为使用这一功能也会导致 Less 代码的可移植性变低，因为直接内嵌 JS 代码，所以无法使用 dotless 等其他语言的 Less 编译器进行处理。而且不同 JS 引擎还可能有兼容性差异。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>我个人认为，Less 从语言特性的设计到功能的健壮程度和另外两者相比都有一些缺陷，但因为 Bootstrap 引入了 Less，导致 Less 在今天还是有很多用户。用 Less 可以满足大多数场景的需求，但相比另外两者，基于 Less 开发类库会复杂得多，实现的代码会比较脏，能实现的功能也会受到 DSL 的制约。比 Stylus 语义更清晰、比 Sass 更接近 CSS 语法，使得刚刚转用 CSS 预编译的开发者能够更平滑地进行切换。当初 Sass 并不支持 SCSS 语法，使得转投 Sass 成本较高，所以 Alexis Sellier 才萌生开发一个更「CSS」的预处理器的念头。大获成功以后反过来影响到了 Sass，迫使其也支持类似 CSS 语法的 SCSS。另外，Less 支持浏览器端编译，这无疑降低了开发门槛，使得很多非专业的开发者能够更快地上手（对于一些个人项目来说，能让项目跑起来就行，对前端的性能并没有专业工程师那么高的要求）</p>
+<p>Sass 在三者之中历史最久，也吸收了其他两者的一些优点。从功能上来说 Sass 大而全，语义明晰但是代码很容易显得累赘。主项目基于 Ruby 可能也是一部分人不选择它的理由（Less 开始也是基于 Ruby 开发，后来逐渐转到 less.js 项目中）。 Sass 有一个「事实标准」库——Compass，于是对于很多开发者而言省去了选择类库的烦恼，对于提升开发效率也有不小的帮助。</p>
+<p>Stylus 的语法非常灵活，很多语义都是根据上下文隐含的。基于 Stylus 可以写出非常简洁的代码，但对使用团队的开发素养要求也更高，更需要有良好的开发规范或约定。Stylus 是前 Node.js 圈第一大神 TJ Holowaychuk 的作品，虽然他已经弃坑了，但是仍然有不小的号召力。和 Sass 有 Compass 类似，Stylus 有一个官方开发的样式库 nib，同样提供了不少好用的 mixin。对于比较有经验的开发者，用 Stylus 可能更会有一种畅快的感觉。总的来说用一个词形容 Stylus 的话，我会用「sexy」。</p>
+<p>总的来说，三种预处理器百分之七八十的功能是类似的。Less 适合帮助团队更快地上手预处理代码的开发，而 Sass 和 Stylus 的差异更在于口味。比如有的人喜欢 jQuery 用一个 $ 做大部分的事，而另一些人觉得不一样的功能就该有明确的语义上的差别。在这里我不会做具体的推荐。当然，再次声明一下由于我个人接触 Less 开发比较多，所以可能遇到的坑也多一些，文中没有列出 Sass 和 Stylus 的问题并不代表他们没有。    </p>
+
+        </section>
+    </article>
+    
+        <!-- disqus 评论框 start -->
+        <div class="comment">
+            <div id="disqus_thread" class="disqus-thread">
+              <i>加载评论框需要翻墙</i>
+            </div>
+        </div>
+        <!-- disqus 评论框 end -->
+    
+    
+        <!-- livere 评论框 start -->
+        <div class="comment">
+            <div id="lv-container" data-id="city" data-uid="your_livere_uid"></div>
+        </div>
+        <!-- livere 评论框 end -->
+        
+  </div>
+  <aside>
+    
+    <div class="toc-container">
+        <h1>目录</h1>
+        <div class="content">
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#基本语法"><span class="toc-number">1.</span> <span class="toc-text">基本语法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Sass"><span class="toc-number">1.1.</span> <span class="toc-text">Sass:</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#嵌套语法"><span class="toc-number">2.</span> <span class="toc-text">嵌套语法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#选择器引用"><span class="toc-number">3.</span> <span class="toc-text">选择器引用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#我个人是推荐这种写法，因为当你确定-section-link-的样式不依赖于它位于-section-或-section-title-下时，就不该嵌套于此，否则如果为了一点点性能上的考虑-还不一定是优化-，使得设计意图变得更不准确，我觉得得不偿失"><span class="toc-number">3.1.</span> <span class="toc-text">我个人是推荐这种写法，因为当你确定 .section-link  的样式不依赖于它位于 section 或 .section-title 下时，就不该嵌套于此，否则如果为了一点点性能上的考虑(还不一定是优化)，使得设计意图变得更不准确，我觉得得不偿失</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#变量"><span class="toc-number">4.</span> <span class="toc-text">变量</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Sass-1"><span class="toc-number">4.1.</span> <span class="toc-text">Sass:</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#变量作用域"><span class="toc-number">5.</span> <span class="toc-text">变量作用域</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#输出"><span class="toc-number">5.1.</span> <span class="toc-text">输出</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#输出-1"><span class="toc-number">5.2.</span> <span class="toc-text">输出</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#函数"><span class="toc-number">6.</span> <span class="toc-text">函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#逻辑控制"><span class="toc-number">7.</span> <span class="toc-text">逻辑控制</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">8.</span> <span class="toc-text">总结</span></a></li></ol>
+        </div>
+    </div>
+    
+  </aside>
+</main>
+
+<!-- disqus 公共JS代码 -->
+<script type="text/javascript">
+  /* * * CONFIGURATION VARIABLES * * */
+  var disqus_shortname = "wangbo的博客";
+  var disqus_identifier = "http://SenYang2017.github.io/2018/01/21/CSS预处理器 Sass、LESS和Stylus的语法和区别/";
+  var disqus_url = "http://SenYang2017.github.io/2018/01/21/CSS预处理器 Sass、LESS和Stylus的语法和区别/";
+
+  isAgent(getDisqus)
+
+  // determine user agent in China
+  function isAgent(cb) {
+    var url = '//graph.facebook.com/feed?callback=h';
+    var xhr = new XMLHttpRequest();
+    var called = false;
+    xhr.open('GET', url);
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === 4 && xhr.status === 200) {
+      called = true;
+      cb(true);
+      }
+    };
+    xhr.send();
+    // timeout 1s, this facebook API is very fast.
+    setTimeout(function() {
+      if (!called) {
+      xhr.abort();
+      cb(false)
+      }
+    }, 1000);
+  }
+
+  function getDisqus(isAgent) {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; 
+    dsq.async = true
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq)
+  }
+</script>
+<!-- disqus 公共JS代码 end -->
+
+
+<script type="text/javascript">
+  (function(d, s) {
+      var j, e = d.getElementsByTagName(s)[0];
+
+      if (typeof LivereTower === 'function') { return; }
+
+      j = d.createElement(s);
+      j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+      j.async = true;
+
+      e.parentNode.insertBefore(j, e);
+  })(document, 'script');
+</script>
+
+
+  <footer>
+  <div class="copyright">
+    <div>
+      &copy; 2018 | Powered by <a href="https://hexo.io" target="_blank">Hexo</a>&nbsp
+    </div>
+    <div>
+      Theme by <a href="https://github.com/lewis-geek/hexo-theme-Aath" target="_blank">Aath</a>
+    </div>
+  </div>
+</footer>
+
+
+<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script src="/lib/in-view.min.js"></script>
+<script src="/lib/lodash.min.js"></script>
+<script>
+  var isDown = true
+  var oldY = 0
+  inView.offset(50)
+
+  document.body.addEventListener('touchstart', function(){});
+  
+  window.addEventListener('scroll', _.throttle(e => {
+    var currentY = window.scrollY
+    if((oldY - currentY) < 0) {
+      isDown = true
+    } else {
+      isDown = false
+    }
+    oldY = currentY
+  }, 250))
+
+  $("article img").each(function() {
+      var strA = "<a data-fancybox='gallery' href='" + this.src + "'></a>";
+      $(this).wrapAll(strA);
+  });
+
+  $('.toc-link').each(function() {
+      var href = $(this).attr("href");
+      
+      inView(href).on('exit', () => {
+        if (isDown) {
+          handleActive(href)
+        }
+      })
+
+      inView(href).on('enter', () => {
+        if (!isDown) {
+          handleActive(href)
+        }
+      })
+
+      this.onclick = function(e) {
+        var pos = $(href).offset().top - 10;
+        $("html,body").animate({scrollTop: pos}, 300);
+        setTimeout(() => {
+          handleActive(href)
+        }, 350)
+        return false
+      }
+  })
+
+  function handleActive(href) {
+    document.querySelectorAll('.toc-link').forEach(elm => {
+      elm.classList.remove('active')
+    })
+    document.querySelector(".toc [href='"+ href +"']").classList.add('active')
+  }
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.1.20/jquery.fancybox.min.js"></script>
+
+
+</body>
+</html>
