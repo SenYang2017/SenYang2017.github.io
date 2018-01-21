@@ -63,11 +63,20 @@
             
           </div>
           <h2 id="基本语法"><a href="#基本语法" class="headerlink" title="基本语法"></a>基本语法</h2><p>Less的基本语法属于 CSS风格 ，而Sass、Stylus相比之下激进一些，利用缩进、空格和换行来减少需要输入的字符。不过区别在于Sass、Stylus同时也兼容 CSS风格 代码。  </p>
-<p>###<font color="red"> Less:</font><br>        .box{<br>            display:block;<br>            }</p>
-<h3 id="Sass"><a href="#Sass" class="headerlink" title="Sass:"></a><font color="red">Sass:</font></h3><pre><code>.box
+<font color="red"> Less:</font>
+
+<pre><code>.box{
+    display:block;
+    }
+</code></pre> <font color="red">Sass:</font>
+
+<pre><code>.box
     display:block
-</code></pre><p>###<font color="red"> Stylus: </font><br>        .box<br>            display:block</p>
-<h2 id="嵌套语法"><a href="#嵌套语法" class="headerlink" title="嵌套语法"></a>嵌套语法</h2><p>三者的嵌套语法都是一致的，甚至连引用父级选择器的标记 <code>&amp;</code> 也相同。区别只是Sass和Stylus可以用没有大括号的方式书写，以Less为例：</p>
+</code></pre><font color="red"> Stylus: </font>
+
+<pre><code>.box
+    display:block
+</code></pre><h2 id="嵌套语法"><a href="#嵌套语法" class="headerlink" title="嵌套语法"></a>嵌套语法</h2><p>三者的嵌套语法都是一致的，甚至连引用父级选择器的标记 <code>&amp;</code> 也相同。区别只是Sass和Stylus可以用没有大括号的方式书写，以Less为例：</p>
 <pre><code>.a{
     &amp;.b{
         color:red;
@@ -154,18 +163,23 @@ h1{
     color #999
   /* other post styles */
 </code></pre><h3 id="我个人是推荐这种写法，因为当你确定-section-link-的样式不依赖于它位于-section-或-section-title-下时，就不该嵌套于此，否则如果为了一点点性能上的考虑-还不一定是优化-，使得设计意图变得更不准确，我觉得得不偿失"><a href="#我个人是推荐这种写法，因为当你确定-section-link-的样式不依赖于它位于-section-或-section-title-下时，就不该嵌套于此，否则如果为了一点点性能上的考虑-还不一定是优化-，使得设计意图变得更不准确，我觉得得不偿失" class="headerlink" title="我个人是推荐这种写法，因为当你确定 .section-link  的样式不依赖于它位于 section 或 .section-title 下时，就不该嵌套于此，否则如果为了一点点性能上的考虑(还不一定是优化)，使得设计意图变得更不准确，我觉得得不偿失"></a>我个人是推荐这种写法，因为当你确定 <code>.section-link</code>  的样式不依赖于它位于 <code>section</code> 或 <code>.section-title</code> 下时，就不该嵌套于此，否则如果为了一点点性能上的考虑(还不一定是优化)，使得设计意图变得更不准确，我觉得得不偿失</h3><h2 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h2><p>变量无疑为CSS增加了一种有效的复用方式，减少了原来在CSS中无法避免的重复 硬编码。</p>
-<p>###<font color="red"> Less:</font></p>
+<font color="red"> Less:</font>
+
+
 <pre><code>@red: #c00;
 
 strong {
   color: @red;
 }
-</code></pre><h3 id="Sass-1"><a href="#Sass-1" class="headerlink" title="Sass:"></a><font color="red">Sass:</font></h3><pre><code>$red: #c00;
+</code></pre> <font color="red">Sass:</font>
+
+<pre><code>$red: #c00;
 
 strong {
   color: $red;
 }
-</code></pre><p>###<font color="red"> Stylus: </font></p>
+</code></pre><font color="red"> Stylus: </font>
+
 <pre><code>red = #c00
 
 strong
@@ -174,22 +188,34 @@ strong
 <p>相比之下Sass的选择中规中矩，而Stylus就不同了，不需要额外的标志符。这意味着：在Stylus中，我们可以覆写CSS原生的属性值！Stylus的设计让人有一种 [你以为在写CSS，但其实你不是] 的感觉,后面会有很多这样的例子。</p>
 <h2 id="变量作用域"><a href="#变量作用域" class="headerlink" title="变量作用域"></a>变量作用域</h2><p>三种预处理器的变量作用域都是按嵌套的规则集划分，并且在当前规则集下找不到对应变量时会逐级向上查找，注意这个和原生CSS的逻辑是完全不同的。  </p>
 <p>如果我们在代码中重写某个已经定义的变量的值，Less的处理逻辑和其他两者有非常<strong>关键</strong>的区别。在Less中，这个行为被称为<a href="http://lesscss.org/features/#variables-feature-lazy-loading" target="_blank" rel="noopener">懒加载</a>。所有Less变量的计算，都是以这个变量最后一次被定义的值为准（就是被覆盖了，最后一个把之前所有定义的都覆盖了）。举个例子更容易说清楚：</p>
-<p>###<font color="red"> Less:</font><br>    @size: 10px;<br>    .box {<br>        width: @size;<br>    }</p>
-<pre><code>@size: 20px;
+<font color="red"> Less:</font>
+
+<pre><code>@size: 10px;
+.box {
+    width: @size;
+}
+
+@size: 20px;
 .ball {
     width: @size;
 }
-</code></pre><h3 id="输出"><a href="#输出" class="headerlink" title="输出"></a>输出</h3><pre><code>.box {
+</code></pre><p> 输出</p>
+<pre><code>.box {
   width: 20px;
 }
 .ball {
   width: 20px;
 }    
-</code></pre><p>###<font color="red">而在 Stylus 中： </font><br>    size = 10px<br>    .box<br>      width: size</p>
-<pre><code>size = 20px
+</code></pre><font color="red">而在 Stylus 中： </font>
+
+<pre><code>size = 10px
+.box
+  width: size
+
+size = 20px
 .ball
   width: size
-</code></pre><h3 id="输出-1"><a href="#输出-1" class="headerlink" title="输出"></a>输出</h3><pre><code>.box {
+</code></pre><h3 id="输出"><a href="#输出" class="headerlink" title="输出"></a>输出</h3><pre><code>.box {
   width: 10px;
 }
 .ball {
@@ -218,9 +244,16 @@ strong
   background-color: lighten(success-color, 40%)   
 </code></pre><p>这种情况下后面的代码就无法通过重写变量值来覆盖样式了。Sass 也是如此。优点是 Stylus 和 Sass 这样的处理会不容易受多个第三方库变量名冲突的影响，因为一个变量不能影响在定义它以前的输出样式。  </p>
 <p>由于 Sass 和 Stylus 变量在「运行」过程中使用完可以修改后再使用输出不同的值，所以这两者还提供了「仅当变量不存在时才赋值」的功能：    </p>
-<p>###<font color="red">Sass： </font><br>    $x: 1;<br>    $x: 5 !default;<br>    $y: 3 !default;</p>
-<pre><code>// $x = 1, $y = 3
-</code></pre><p>###<font color="red"> Stylus： </font></p>
+<font color="red">Sass： </font>    
+
+<pre><code>$x: 1;
+$x: 5 !default;
+$y: 3 !default;
+
+// $x = 1, $y = 3
+</code></pre><font color="red"> Stylus： </font>
+
+
 <pre><code>x = 1
 x := 5 // or x ?= 5
 y = 3
@@ -330,7 +363,7 @@ div {
     <div class="toc-container">
         <h1>目录</h1>
         <div class="content">
-            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#基本语法"><span class="toc-number">1.</span> <span class="toc-text">基本语法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Sass"><span class="toc-number">1.1.</span> <span class="toc-text">Sass:</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#嵌套语法"><span class="toc-number">2.</span> <span class="toc-text">嵌套语法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#选择器引用"><span class="toc-number">3.</span> <span class="toc-text">选择器引用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#我个人是推荐这种写法，因为当你确定-section-link-的样式不依赖于它位于-section-或-section-title-下时，就不该嵌套于此，否则如果为了一点点性能上的考虑-还不一定是优化-，使得设计意图变得更不准确，我觉得得不偿失"><span class="toc-number">3.1.</span> <span class="toc-text">我个人是推荐这种写法，因为当你确定 .section-link  的样式不依赖于它位于 section 或 .section-title 下时，就不该嵌套于此，否则如果为了一点点性能上的考虑(还不一定是优化)，使得设计意图变得更不准确，我觉得得不偿失</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#变量"><span class="toc-number">4.</span> <span class="toc-text">变量</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Sass-1"><span class="toc-number">4.1.</span> <span class="toc-text">Sass:</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#变量作用域"><span class="toc-number">5.</span> <span class="toc-text">变量作用域</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#输出"><span class="toc-number">5.1.</span> <span class="toc-text">输出</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#输出-1"><span class="toc-number">5.2.</span> <span class="toc-text">输出</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#函数"><span class="toc-number">6.</span> <span class="toc-text">函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#逻辑控制"><span class="toc-number">7.</span> <span class="toc-text">逻辑控制</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">8.</span> <span class="toc-text">总结</span></a></li></ol>
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#基本语法"><span class="toc-number">1.</span> <span class="toc-text">基本语法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#嵌套语法"><span class="toc-number">2.</span> <span class="toc-text">嵌套语法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#选择器引用"><span class="toc-number">3.</span> <span class="toc-text">选择器引用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#我个人是推荐这种写法，因为当你确定-section-link-的样式不依赖于它位于-section-或-section-title-下时，就不该嵌套于此，否则如果为了一点点性能上的考虑-还不一定是优化-，使得设计意图变得更不准确，我觉得得不偿失"><span class="toc-number">3.1.</span> <span class="toc-text">我个人是推荐这种写法，因为当你确定 .section-link  的样式不依赖于它位于 section 或 .section-title 下时，就不该嵌套于此，否则如果为了一点点性能上的考虑(还不一定是优化)，使得设计意图变得更不准确，我觉得得不偿失</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#变量"><span class="toc-number">4.</span> <span class="toc-text">变量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#变量作用域"><span class="toc-number">5.</span> <span class="toc-text">变量作用域</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#输出"><span class="toc-number">5.1.</span> <span class="toc-text">输出</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#函数"><span class="toc-number">6.</span> <span class="toc-text">函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#逻辑控制"><span class="toc-number">7.</span> <span class="toc-text">逻辑控制</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">8.</span> <span class="toc-text">总结</span></a></li></ol>
         </div>
     </div>
     
