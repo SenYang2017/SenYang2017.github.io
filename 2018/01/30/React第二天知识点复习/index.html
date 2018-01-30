@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="description" content="start from zero">
+  <meta name="keywords" content="">
+  
+    <link rel="icon" href="/favicon.ico">
+  
+    
+  <title>React第二天知识点复习 | inerdstack</title>
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.1.20/jquery.fancybox.min.css" />
+</head>
+
+<body>
+  <header>
+  <div class="header-container">
+    <a class='logo' href="/">
+      <span>inerdstack</span>
+    </a>
+    <ul class="right-header">
+      
+        <li class="nav-item">
+          
+            <a href="/" class="item-link">首页</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/about" class="item-link">关于</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/archives" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/tags" class="item-link">标签</a>
+          
+        </li>
+      
+    </ul>
+  </div>
+</header>
+
+  <main id='post'>
+  <div class="content">
+    <article>
+        <section class="content markdown-body">
+          <h1>React第二天知识点复习</h1>
+          <div class='post-meta'>
+            <i class="fa fa-calendar" aria-hidden="true"></i> <time>2018年01月30日</time>
+            
+            
+          </div>
+          <h2 id="一、什么是属性-props-？什么是状态-state-？"><a href="#一、什么是属性-props-？什么是状态-state-？" class="headerlink" title="一、什么是属性(props)？什么是状态(state)？"></a>一、什么是属性(props)？什么是状态(state)？</h2><font color="red"><br>### props<br></font><br>React的核心思想就是组件化思想，页面会被切分成一些独立的，可复用的组件。<br><br>组件从概念上看就是一个函数，可以接受一个参数作为输入值，这个参数就是<code>props</code>，所以可以吧props理解为从外部传入组件内部的数据，由于React是单向数据流，所以props基本上也就是从父组件向子组件传递的数据<br><br><font size="5"><br>总结：<code>props</code>是一个从外部传进组件的参数，主要作为就是从父组件向子组件传递数据，它具有可读性和不变性，只能通过外部组件主动传入新的<code>props</code>来重新渲染子组件，否则子组件的<code>props</code>以及展现形式不会改变<br></font><br><font color="red"><br>### state<br></font><br>一个组件的显示形态可以由数据状态和外部参数所决定，外部参数也就是props，而数据状态就是state。<br><br>1、state的作用<br>state是React中组件的一个对象，React把用户界面当做是状态机，想象它有不同的状态然后渲染这些状态，可以轻松让用户界面与数据保持一致，React中，更新组件的state，会导致重新渲染用户页面(不要操作DOM),简单来说，就是用户会随着state变化而变化。<br><br>2.state工作原理<br>常用的通知React数据变化的方法是调用setState(data,callback)setState是修改状态，这个方法会合并data到this.state，并重新渲染组件，渲染完成后，调用可选的callback回调，大部分情况不需要提供callback，因为React会负责把界面更新到最新状态<br><br>3.哪些组件应该有state？<br>大部分组件的工作应该是从props里取数据并渲染出来，但是，有时需要对用户输入，服务器请求或时间变化等作出响应，这时才需要state，组件应该尽可能的无状态化，这样能隔离state，把它放到最合理的地方(Redux做的就是这个事情？)，也能减少冗(rong)余并易于解释程序运作过程，常用的模式就是创建多个 只负责渲染数据的无状态(stateless)组件，在他们的上层创建一个有状态(stateful)组件并把它的状态通过props传给子级，有状态的组件封装了所有的用户交互逻辑，而这些无状态只负责声明式的渲染数据<br><br>4.哪些应该作为state？<br><br>state应该包括哪些可能被组件的事件处理器改变并触发用户界面更新的数据，这种数据一般很小且能被JSON序列化，当创建一个状态化的组件的时候，应该保持数据的精简，然后存入this.state，在render()中 在根据state来计算需要的其他数据，因为如果在state里添加冗余数据或计算所得数据，经常需要手动保持数据同步。<br><br>5.哪些不应该作为state？<br>this.state应该仅包括能表示用户界面状态所需要的最少数据，因此不应该包括：<br><br>计算所得数据：<br>React组件：在render()里使用props和state来创建爱你它<br><br>基于props的重复数据：尽可能保持用props来作为唯一的数据来源，把props保存到state中的有效的场景是需要知道他以前的值的时候，因为未来的props可能会变化。<br><br><br><br><font size="5"><br>总结：<code>state</code>和<code>props</code>主要的区别在于props是不可变的，而state可以根据与用户交互来改变；这就是为什么有些容器组件需要定义state来更新和修改数据，而子组件只能通过props来传递数据<br>在子组件中：我们可以使用this.props.name 来获取父组件的state值<br>在父组件中使用state，并通过子组件上使用<code>his.props</code>将其传递到子组件上<br><br><br></font>
+
+<h2 id="二、元素和组件？"><a href="#二、元素和组件？" class="headerlink" title="二、元素和组件？"></a>二、元素和组件？</h2><font color="red" size="4"><br>元素<br>元素是构成 React 应用的最小单位，用来描述你在屏幕上看到的内容。元素事实上只是构成组件的一个部分。<br><br><br></font>
+
+<p><code>React 元素 (React element)</code>，它是React中最小基本单位，我们可以使用JSX语法轻松创建一个React元素  </p>
+<pre><code>const element = &lt;div className=&quot;element&quot;&gt;I&apos;m element&lt;/div&gt;
+</code></pre><p>React 元素不是真实的DOM元素，它仅仅是js的普通对象(plain objects)，所以也没有办法直接调用DOM原生的API。上面的JSX转译后的对象大概是这样的：</p>
+<pre><code>{
+    _context: Object,
+    _owner: null,
+    key: null,
+    props: {
+    className: &apos;element&apos;，
+    children: &apos;I&apos;m element&apos;
+  },
+    ref: null,
+    type: &quot;div&quot;
+}
+</code></pre><p>只有在这个元素被渲染完成后，才能通过选择器的方式获取它对应的DOM元素，不过，按照React有限状态机的设计思想，应该使用状态和属性来表述组件，要尽量避免DOM操作，即便要进行DOM操作，也应该使用Reacet提供的接口<code>ref</code> 和 <code>getDOMNode()</code>。一般使用React提供的接口就足以应付需要DOM操作的场景了，因此想jQuery强大的选择器在React中几乎都没有用武之地了。</p>
+<p>除了使用JSX语法，我们还可以使用<code>React.createElement()</code>  和 <code>React.cloneElement()</code>  来构建React元素。    </p>
+<h3 id="React-createElement"><a href="#React-createElement" class="headerlink" title="React.createElement()"></a><code>React.createElement()</code></h3><p>JSX 语法就是用<code>React.createElement()</code>来构建React元素的，它接受三个参数，第一个参数可以是一个标签名。如<code>div</code>,<code>span</code>,或者React组件。第二个参数为传入的属性。第三个以及之后的参数，皆作为组件的子组件。  </p>
+<pre><code>React.createElement(
+    type,
+    [props],
+    [...children]
+)
+</code></pre><h3 id="React-cloneElement"><a href="#React-cloneElement" class="headerlink" title="React.cloneElement()"></a>React.cloneElement()</h3><p><code>React.cloneElement()</code>与<code>React.createElement()</code>相似，不同的是它传入的第一个参数是一个 React 元素，而不是标签名或组件。新添加的属性会并入原有的属性，传入到返回的新元素中，而就的子元素奖杯替换。</p>
+<pre><code>React.cloneElement(
+  element,
+  [props],
+  [...children]
+)
+</code></pre><font color="red" size="4"><br>组件<br>组件从概念上看就像是函数，它可以接收任意的输入值（称之为“props”），并返回一个需要在页面上展示的React元素。组件可以将UI切分成一些的独立的、可复用的部件，这样你就只需专注于构建每一个单独的部件。<br><br></font>
+
+<p>React 中有三种构建组件的方式。React.createClass()、ES6 class和无状态函数。  </p>
+<h3 id="React-createClass"><a href="#React-createClass" class="headerlink" title="React.createClass()"></a>React.createClass()</h3><p><code>React.createClass()</code>是三种方式中最早，兼容性最好的方法。在0.14版本前官方指定的组件写法。</p>
+<pre><code>var Greeting = React.createClass({
+  render: function() {
+    return &lt;h1&gt;Hello, {this.props.name}&lt;/h1&gt;;
+  }
+});
+</code></pre><h3 id="ES6-class"><a href="#ES6-class" class="headerlink" title="ES6 class"></a>ES6 class</h3><p>ES6 class是目前官方推荐的使用方式，它使用了ES6标准语法来构建，但它的实现仍是调用React.createClass()来实现了，ES6 class的生命周期和自动绑定方式与React.createClass()略有不同。</p>
+<pre><code>class Greeting extemds React.Component{
+  render: function() {
+    return &lt;h1&gt;Hello, {this.props.name}&lt;/h1&gt;;
+  }
+};
+</code></pre><h3 id="无状态函数"><a href="#无状态函数" class="headerlink" title="无状态函数"></a>无状态函数</h3><p>无状态函数是使用函数构建的无状态组件，无状态组件传入props和context两个参数，它没有state，除了render()，没有其它生命周期方法。 </p>
+<pre><code>function Greeting (props) {
+  return &lt;h1&gt;Hello, {props.name}&lt;/h1&gt;;
+}
+</code></pre><p>React.createClass()和ES6 class构建的组件的数据结构是类，无状态组件数据结构是函数，它们在 React 被视为是一样的。</p>
+<p><font size="5"><br>总结:    Facebook 官方早就声明 ES6React.Component将取代React.createClass。随着 React 不断发展，React.createClass暴露出一些问题：</font></p>
+<p>相比React.Component可以有选择性的绑定需要的函数，React.createClass会自动绑定函数，这样会导致不必要的性能开销。<br>React.createClass亲生的 mixin，React.Component不再支持，事实上 mixin 不够优雅直观，替代方案是使用更流行的高阶组件-HOC，如果你的项目还离不开 也可以使用 react-mixin</p>
+<p>总的来说：无状态函数式写法 优于React.createClass，而React.createClass优于React.Component。<br></p>
+<h2 id="三、组件有哪几种类型，区别在哪"><a href="#三、组件有哪几种类型，区别在哪" class="headerlink" title="三、组件有哪几种类型，区别在哪"></a>三、组件有哪几种类型，区别在哪</h2>
+        </section>
+    </article>
+    
+        <!-- disqus 评论框 start -->
+        <div class="comment">
+            <div id="disqus_thread" class="disqus-thread">
+              <i>加载评论框需要翻墙</i>
+            </div>
+        </div>
+        <!-- disqus 评论框 end -->
+    
+    
+        <!-- livere 评论框 start -->
+        <div class="comment">
+            <div id="lv-container" data-id="city" data-uid="your_livere_uid"></div>
+        </div>
+        <!-- livere 评论框 end -->
+        
+  </div>
+  <aside>
+    
+    <div class="toc-container">
+        <h1>目录</h1>
+        <div class="content">
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#一、什么是属性-props-？什么是状态-state-？"><span class="toc-number">1.</span> <span class="toc-text">一、什么是属性(props)？什么是状态(state)？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#二、元素和组件？"><span class="toc-number">2.</span> <span class="toc-text">二、元素和组件？</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#React-createElement"><span class="toc-number">2.1.</span> <span class="toc-text">React.createElement()</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#React-cloneElement"><span class="toc-number">2.2.</span> <span class="toc-text">React.cloneElement()</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#React-createClass"><span class="toc-number">2.3.</span> <span class="toc-text">React.createClass()</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ES6-class"><span class="toc-number">2.4.</span> <span class="toc-text">ES6 class</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#无状态函数"><span class="toc-number">2.5.</span> <span class="toc-text">无状态函数</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#三、组件有哪几种类型，区别在哪"><span class="toc-number">3.</span> <span class="toc-text">三、组件有哪几种类型，区别在哪</span></a></li></ol>
+        </div>
+    </div>
+    
+  </aside>
+</main>
+
+<!-- disqus 公共JS代码 -->
+<script type="text/javascript">
+  /* * * CONFIGURATION VARIABLES * * */
+  var disqus_shortname = "wangbo的博客";
+  var disqus_identifier = "http://SenYang2017.github.io/2018/01/30/React第二天知识点复习/";
+  var disqus_url = "http://SenYang2017.github.io/2018/01/30/React第二天知识点复习/";
+
+  isAgent(getDisqus)
+
+  // determine user agent in China
+  function isAgent(cb) {
+    var url = '//graph.facebook.com/feed?callback=h';
+    var xhr = new XMLHttpRequest();
+    var called = false;
+    xhr.open('GET', url);
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === 4 && xhr.status === 200) {
+      called = true;
+      cb(true);
+      }
+    };
+    xhr.send();
+    // timeout 1s, this facebook API is very fast.
+    setTimeout(function() {
+      if (!called) {
+      xhr.abort();
+      cb(false)
+      }
+    }, 1000);
+  }
+
+  function getDisqus(isAgent) {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; 
+    dsq.async = true
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq)
+  }
+</script>
+<!-- disqus 公共JS代码 end -->
+
+
+<script type="text/javascript">
+  (function(d, s) {
+      var j, e = d.getElementsByTagName(s)[0];
+
+      if (typeof LivereTower === 'function') { return; }
+
+      j = d.createElement(s);
+      j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+      j.async = true;
+
+      e.parentNode.insertBefore(j, e);
+  })(document, 'script');
+</script>
+
+
+  <footer>
+  <div class="copyright">
+    <div>
+      &copy; 2018 | Powered by <a href="https://hexo.io" target="_blank">Hexo</a>&nbsp
+    </div>
+    <div>
+      Theme by <a href="https://github.com/lewis-geek/hexo-theme-Aath" target="_blank">Aath</a>
+    </div>
+  </div>
+</footer>
+
+
+<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script src="/lib/in-view.min.js"></script>
+<script src="/lib/lodash.min.js"></script>
+<script>
+  var isDown = true
+  var oldY = 0
+  inView.offset(50)
+
+  document.body.addEventListener('touchstart', function(){});
+  
+  window.addEventListener('scroll', _.throttle(e => {
+    var currentY = window.scrollY
+    if((oldY - currentY) < 0) {
+      isDown = true
+    } else {
+      isDown = false
+    }
+    oldY = currentY
+  }, 250))
+
+  $("article img").each(function() {
+      var strA = "<a data-fancybox='gallery' href='" + this.src + "'></a>";
+      $(this).wrapAll(strA);
+  });
+
+  $('.toc-link').each(function() {
+      var href = $(this).attr("href");
+      
+      inView(href).on('exit', () => {
+        if (isDown) {
+          handleActive(href)
+        }
+      })
+
+      inView(href).on('enter', () => {
+        if (!isDown) {
+          handleActive(href)
+        }
+      })
+
+      this.onclick = function(e) {
+        var pos = $(href).offset().top - 10;
+        $("html,body").animate({scrollTop: pos}, 300);
+        setTimeout(() => {
+          handleActive(href)
+        }, 350)
+        return false
+      }
+  })
+
+  function handleActive(href) {
+    document.querySelectorAll('.toc-link').forEach(elm => {
+      elm.classList.remove('active')
+    })
+    document.querySelector(".toc [href='"+ href +"']").classList.add('active')
+  }
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.1.20/jquery.fancybox.min.js"></script>
+
+
+</body>
+</html>
